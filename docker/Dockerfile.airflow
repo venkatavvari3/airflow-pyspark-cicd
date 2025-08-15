@@ -1,0 +1,36 @@
+FROM apache/airflow:2.7.1-python3.9
+
+# Switch to root to install system dependencies
+USER root
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    openjdk-11-jdk \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set Java environment
+ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+
+# Switch back to airflow user
+USER airflow
+
+# Copy requirements
+COPY requirements.txt /tmp/
+COPY requirements-dev.txt /tmp/
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
+
+# Copy DAGs and plugins
+COPY dags/ /opt/airflow/dags/
+COPY plugins/ /opt/airflow/plugins/
+COPY config/ /opt/airflow/config/
+
+# Copy custom Airflow configuration
+COPY config/airflow.cfg /opt/airflow/airflow.cfg
+
+# Set permissions
+USER root
+RUN chown -R airflow:root /opt/airflow/dags /opt/airflow/plugins /opt/airflow/config
+USER airflow
