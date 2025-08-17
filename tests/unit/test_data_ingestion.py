@@ -45,11 +45,17 @@ class TestDataIngestion:
         data = [
             (1, "CUST001", "PROD001", 2, 10.50, None, None),  # null category and region
         ]
+        schema = StructType([
+            StructField("id", IntegerType(), True),
+            StructField("customer_id", StringType(), True),
+            StructField("product_id", StringType(), True),
+            StructField("quantity", IntegerType(), True),
+            StructField("price", DoubleType(), True),
+            StructField("category", StringType(), True),
+            StructField("region", StringType(), True),
+        ])
+        df = spark_session.createDataFrame(data, schema=schema)
         
-        columns = ["id", "customer_id", "product_id", "quantity", 
-                  "price", "category", "region"]
-        
-        df = spark_session.createDataFrame(data, columns)
         df_clean = clean_data(df)
         
         row = df_clean.first()

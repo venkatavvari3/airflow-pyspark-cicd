@@ -34,10 +34,10 @@ def clean_data(df):
     """Clean and validate input data."""
     # Remove rows with null customer_id or product_id
     df_clean = df.filter(
-        col("customer_id").isNotNull() & 
-        col("product_id").isNotNull() &
-        col("quantity") > 0 &
-        col("price") > 0
+        (col("customer_id").isNotNull()) & 
+        (col("product_id").isNotNull()) &
+        (col("quantity") > 0) &
+        (col("price") > 0)
     )
     
     # Handle missing values
