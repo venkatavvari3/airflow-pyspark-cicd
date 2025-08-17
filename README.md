@@ -27,7 +27,7 @@ airflow-pyspark-cicd/
 ├── config/                           # Configuration files
 ├── requirements.txt                  # Python dependencies
 ├── requirements-dev.txt              # Development dependencies
-└── docker-compose.yml               # Local development setup
+└── docker-compose.yml                # Local development setup
 ```
 
 ## Features
@@ -74,40 +74,43 @@ airflow-pyspark-cicd/
    pip install -r requirements-dev.txt
    ```
 
-3. **Install Java**
+4. **Install Java**
 
-- Ensure Java 11 is installed and `JAVA_HOME` is set.
+   - Ensure Java 11 is installed and `JAVA_HOME` is set.
 
-4. **Install and Configure Hadoop Winutils**
+5. **Install and Configure Hadoop Winutils (Windows Only)**
 
-- Download `winutils.exe` for Hadoop 3.3.x from [cdarlint/winutils releases](https://github.com/cdarlint/winutils/).
-- Create a directory: `C:\hadoop\bin`
-- Place `winutils.exe` in `C:\hadoop\bin`
-- Set environment variables:
-  - `HADOOP_HOME` to `C:\hadoop`
-  - Add `C:\hadoop\bin` to your system `PATH`
+   - Download `winutils.exe` for Hadoop 3.3.x from [cdarlint/winutils releases](https://github.com/cdarlint/winutils/).
+   - Create a directory: `C:\hadoop\bin`
+   - Place `winutils.exe` in `C:\hadoop\bin`
+   - Set environment variables:
+     - `HADOOP_HOME` to `C:\hadoop`
+     - Add `C:\hadoop\bin` to your system `PATH`
 
-5. **Install Microsoft Visual C++ Redistributable**
+6. **Install Microsoft Visual C++ Redistributable (Windows Only)**
 
-- Download and install both [x64](https://aka.ms/vs/17/release/vc_redist.x64.exe) and [x86](https://aka.ms/vs/17/release/vc_redist.x86.exe) versions.
-- Restart your computer after installation.
+   - Download and install both [x64](https://aka.ms/vs/17/release/vc_redist.x64.exe) and [x86](https://aka.ms/vs/17/release/vc_redist.x86.exe) versions.
+   - Restart your computer after installation.
 
-6. **Verify winutils.exe**
+7. **Verify winutils.exe (Windows Only)**
 
-Open **Command Prompt** (not PowerShell) and run:
-```cmd
-C:\hadoop\bin\winutils.exe ls
-```
-If you see a directory listing (not a DLL error), your setup is correct.
+   Open **Command Prompt** (not PowerShell) and run:
+   ```cmd
+   C:\hadoop\bin\winutils.exe ls
+   ```
+   If you see a directory listing (not a DLL error), your setup is correct.
 
-7. **Run PySpark Tests**
+8. **Run PySpark Tests**
 
-```bash
-pytest tests/unit/ -v
-pytest tests/integration/ -v
-```
+   ```bash
+   pytest tests/unit/ -v
+   pytest tests/integration/ -v
+   ```
 
-8. **Start local Airflow**
+   > **Note:**  
+   > If you see errors like `ExitCodeException exitCode=-1073741515`, it means a required DLL is missing. Double-check the steps above, especially the Visual C++ Redistributable and winutils.exe setup.
+
+9. **Start local Airflow**
    ```bash
    docker-compose up -d
    ```
@@ -289,6 +292,13 @@ The pipeline includes comprehensive data quality checks:
 3. Check connections and variables
 4. Review task dependencies
 
+#### PySpark on Windows
+- Ensure you have installed the correct `winutils.exe` for Hadoop 3.3.x.
+- Install the Microsoft Visual C++ Redistributable (both x64 and x86).
+- Set `HADOOP_HOME` and add `C:\hadoop\bin` to your `PATH`.
+- Test `winutils.exe` from Command Prompt: `C:\hadoop\bin\winutils.exe ls`
+- If you see `ExitCodeException exitCode=-1073741515`, a required DLL is missing.
+
 ### Getting Help
 
 1. Check the GitHub Issues for known problems
@@ -308,6 +318,3 @@ The pipeline includes comprehensive data quality checks:
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
-#   a i r f l o w - p y s p a r k - c i c d 
- 
- 
